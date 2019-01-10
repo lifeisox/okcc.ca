@@ -7442,8 +7442,8 @@ p.et_pb_global_divider {
 	margin: -16px 0 0 -16px;
 	border-radius: 32px;
 }
-.mce-toolbar .mce-btn button,
-.qt-dfw {
+.et-pb-option-container .mce-toolbar .mce-btn button,
+.et-pb-option-container .qt-dfw {
 	padding: 3px 10px !important;
 	border: none;
 }

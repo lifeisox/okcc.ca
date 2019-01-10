@@ -790,9 +790,13 @@ class ET_Builder_Library {
 		 *
 		 * @param array[] $custom_tabs See {@self::builder_library_modal_custom_tabs()} return value.
 		 */
-		return apply_filters( 'et_builder_library_modal_custom_tabs', array(
-			'existing_pages' => esc_html__( 'Your Existing Pages', 'et_builder' ),
-		), $post_type );
+		$custom_tabs = array();
+
+		if ( 'layout' !== $post_type ) {
+			$custom_tabs['existing_pages'] = esc_html__( 'Your Existing Pages', 'et_builder' );
+		}
+
+		return apply_filters( 'et_builder_library_modal_custom_tabs', $custom_tabs, $post_type );
 	}
 
 	/**

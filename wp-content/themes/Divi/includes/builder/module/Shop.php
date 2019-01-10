@@ -458,23 +458,27 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 		$order                   = 'ASC'; // Default to ascending order
 		$columns                 = $this->props['columns_number'];
 		$pagination              = 'on' === $this->props['show_pagination'];
-		$all_shop_categories     = et_builder_get_shop_categories();
-		$all_shop_categories_map = array();
-		$raw_product_categories  = self::filter_meta_categories( $this->props['include_categories'], $post_id, 'product_cat' );
+		$product_categories      = array();
 
-		foreach ( $all_shop_categories as $term ) {
-			if ( is_object( $term ) && is_a( $term, 'WP_Term' ) ) {
-				$all_shop_categories_map[ $term->term_id ] = $term->slug;
+		if ('product_category' === $type) {
+			$all_shop_categories     = et_builder_get_shop_categories();
+			$all_shop_categories_map = array();
+			$raw_product_categories  = self::filter_meta_categories( $this->props['include_categories'], $post_id, 'product_cat' );
+
+			foreach ( $all_shop_categories as $term ) {
+				if ( is_object( $term ) && is_a( $term, 'WP_Term' ) ) {
+					$all_shop_categories_map[ $term->term_id ] = $term->slug;
+				}
 			}
-		}
 
-		$product_categories = array_values( $all_shop_categories_map );
+			$product_categories = array_values( $all_shop_categories_map );
 
-		if ( ! empty( $raw_product_categories ) ) {
-			$product_categories = array_intersect_key(
-				$all_shop_categories_map,
-				array_flip( $raw_product_categories )
-			);
+			if ( ! empty( $raw_product_categories ) ) {
+				$product_categories = array_intersect_key(
+					$all_shop_categories_map,
+					array_flip( $raw_product_categories )
+				);
+			}
 		}
 
 		if ( in_array( $orderby, array( 'price-desc', 'date-desc' ) ) ) {
@@ -504,12 +508,12 @@ class ET_Builder_Module_Shop extends ET_Builder_Module_Type_PostBased {
 		$post = $GLOBALS['post'];
 
 		$shop = do_shortcode(
-			sprintf( '[%1$s per_page="%2$s" orderby="%3$s" columns="%4$s" category="%5$s" order="%6$s"]',
+			sprintf( '[%1$s per_page="%2$s" orderby="%3$s" columns="%4$s" %5$s order="%6$s"]',
 				esc_html( $woocommerce_shortcodes_types[ $type ] ),
 				esc_attr( $posts_number ),
 				esc_attr( $orderby ),
 				esc_attr( $columns ),
-				esc_attr( implode( ',', $product_categories ) ),
+				! empty( $product_categories ) ? sprintf( 'category="%s"', esc_attr( implode( ',', $product_categories ) ) ) : '',
 				esc_attr( $order )
 			)
 		);

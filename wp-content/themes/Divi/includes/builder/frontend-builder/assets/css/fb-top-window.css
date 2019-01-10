@@ -1,5 +1,13 @@
 #et-boc,
-#et-fb-app-frame { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+#et-fb-app-frame {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+}
+
 #et-fb-app-frame { z-index: 2; }
 
 /* Force app frame ancestor elements to fully fill the top window */

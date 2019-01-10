@@ -634,36 +634,7 @@ class ET_Builder_Settings {
 	}
 
 	public static function get_registered_post_type_options() {
-		$blacklist      = et_builder_get_blacklisted_post_types();
-
-		// Extra and Library layouts shouldn't appear in Theme Options as configurable post types.
-		$blacklist      = array_merge( $blacklist, array( 'et_pb_layout', 'layout' ) );
-		$raw_post_types = get_post_types( array(
-			'show_ui' => true,
-		), 'objects' );
-		$post_types     = array();
-
-		foreach ( $raw_post_types as $post_type ) {
-			$is_explicitly_supported = in_array( $post_type->name, et_builder_get_third_party_post_types() );
-			$is_blacklisted          = in_array( $post_type->name, $blacklist );
-			$supports_editor         = post_type_supports( $post_type->name, 'editor' );
-			$is_public               = et_builder_is_post_type_public( $post_type->name );
-
-			if ( ! $is_explicitly_supported && ( $is_blacklisted || ! $supports_editor || ! $is_public ) ) {
-				continue;
-			}
-
-			$post_types[] = $post_type;
-		}
-
-		usort( $post_types, 'ET_Builder_Settings::sort_post_types' );
-
-		$post_type_options = array_combine(
-			wp_list_pluck( $post_types, 'name' ),
-			wp_list_pluck( $post_types, 'label' )
-		);
-
-		return $post_type_options;
+		return et_get_registered_post_type_options( 'ET_Builder_Settings::sort_post_types' );
 	}
 
 	public static function sort_post_types( $a, $b ) {

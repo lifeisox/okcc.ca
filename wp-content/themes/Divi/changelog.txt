@@ -1,3 +1,125 @@
+version 3.19.4 ( updated 01-07-2019 )
+- Fixed issue where using a empty code module would cause the page content to not display.
+- Unified Mapping For Copy Paste Styles.
+- Added extend styles for module child items.
+- Fixed a bug where disable item capability were not applied properly.
+- Fixed two places in our Nederlands (nl_NL) translation file where "height" was incorrectly translated "breedte" ("width").
+- Fixed a bug where excerpt field in Visual Builder Page Settings were not preserving HTML content.
+- Removed unwanted "Your Existing Pages" tab appear in the  layout library modal.
+- Fixed Extend Styles modal not resizing properly in some situations.
+- Fixed typo for "Find This" field description in Find & Replace modal.
+- Fixed broken default value on app settings builder in Divi Builder Plugin which is used on legacy theme which saved options not in a single row.
+- Prevent some Mailchimp integration scripts from breaking the Visual Builder.
+- Fixed save keyboard shortcut not working when editing content inside the Settings Modal text editor.
+- Fixed shift+W when typing inside Yoast fields.
+- Fixed a bug that would cause an error when editing content inline while Settings Modal was open.
+- Fixed Shop module rendering in some cases.
+- Fixed audio player controls styles on audio devices.
+- Fixed Responsive Styles for the Email Optin module.
+- Fixed Product Tour buttons highlighting animation on some steps.
+- Fixed unwanted 'p' tags adding into Code module when it's inside the Global Row or Global Section.
+- Fixed incorrect page settings bar which is positioned vertically centered when settings_bar_location option value is not valid.
+- Fixed visual builder not being loaded on Divi Builder Plugin if wp_footer() action hook is not direct child of <body>.
+	* core/ui/utils/frames.js
+	* epanel/custom_functions.php
+	* includes/builder/class-et-builder-element.php
+	* includes/builder/core.php
+	* includes/builder/feature/Library.php
+	* includes/builder/frontend-builder/assets/scripts/preboot.js
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/frontend-builder/helpers.php
+	* includes/builder/functions.php
+	* includes/builder/languages/nl_NL.mo
+	* includes/builder/languages/nl_NL.po
+	* includes/builder/module/Shop.php
+	* includes/builder/styles/frontend-builder-style.less
+
+version 3.19.3 ( updated 12-31-2018 )
+- Fixed incompatibility issue with some third party themes and plugins that caused the Visual Builder to fail to load with a "Cannot read property 'id' of undefined" error.
+- Fixed a bug that caused the 3rd page in the blog module not to load in some situations. 
+- Fixed compatibility issue with the WP Ultimate Recipe plugin, and other plugins that create null shortcode objects. 
+- Fixed Divi navbar overlap in the Visual Builder when switching from Wireframe mode to Desktop mode. 
+	* js/custom.js
+	* scripts/frontend-builder-scripts.js
+
+version 3.19.2 ( updated 12-28-2018 )
+- Fixed "is_shop()", "is_woocommerce()" and other woo checks not working properly on pages with Divi Builder.
+- Prevent adding ID and CSS Class on modules in wireframe mode.
+- Fixed drag and drop preview position on Firefox.
+- Fixed FullWidth Header button not scrolling to the correct location when primary navigation had a transparent background.
+- Fixed cases where Integration scripts where not working correctly in Visual Builder.
+- Fixed excerpt generator that inadvertently displayed script and style contents rather than completely stripping them.
+- Fix undefined function error that occured with some legacy themes.
+	* core/functions.php
+	* core/ui/utils/frames.js
+	* epanel/custom_functions.php
+	* epanel/shortcodes/shortcodes.php
+	* includes/builder/compat/woocommerce.php
+	* includes/builder/feature/BlockEditorIntegration.php
+	* includes/builder/frontend-builder/assets/scripts/preboot.js
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/functions.php
+	* includes/builder/scripts/frontend-builder-scripts.js
+
+version 3.19.1 ( updated 12-27-2018 )
+- Fixed unwanted z-index issue after module is animated.
+- Fixed a bug where Reset Advanced Styles action were not resetting Custom CSS fields.
+- Fixed CSS for Login and Email Optin module layout in Specialty section.
+- Fixed a bug where Blurb module circle icon became square if font size is big.
+- Fixed Dynamic Content being disabled when module styles are reset.
+- Fixed undraggable module items' drag and drop on settings modal in Firefox.
+- Fixed visual builder's incorrect drag handle position when dragging section/row/module which has custom width.
+- Fixed incorrect builder top margin when admin bar is disabled.
+- Fixed unwanted changed row z-index positioning due to recent section-divider related fix.
+- Removed unwanted margin on visual builder of post post-type in RTL layout.
+- Fixed Select Menu position when the admin bar isn't present on the page.
+- Fixed Go To Item list being updated after editing page.
+- Added quick actions modal launch keyboard shortcut into help modal.
+- Fixed go to action not scrolled to the right element when the page has been scrolled manually.
+- Fixed Visual Builder loading with "crm.zoho.com" script on page.
+- Fixed Integration Code sometimes being altered when including scripts.
+	* core/components/data/ScriptReplacer.php
+	* core/components/data/init.php
+	* core/ui/utils/frames.js
+	* includes/builder/frontend-builder/.patches/react-dnd-html5-backend+2.2.0.patch
+	* includes/builder/frontend-builder/assets/css/fb-top-window.css
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/functions.php
+	* includes/builder/scripts/builder.js
+	* includes/builder/scripts/frontend-builder-scripts.js
+	* includes/builder/styles/frontend-builder-style.less
+
+version 3.19 ( updated 12-20-2018 )
+- Added Quick Access feature which allows users to perform and access builder actions and settings respectively, from a single point of entry. This entry point is a searchable modal triggered by a keyboard shortcut: shift + space.
+- Fixed a case where 3rd party faulty code could prevent the Visual Builder from loading.
+- Fixed Landing Page plugin compatibility.
+- Added missing label for image field in Image module.
+- Fixed Help Video popup position in some cases.
+- Fixed a Visual Builder issue where undo-ing a recently added Module via shortcuts could lead to an error.
+- Fixed an error that could sometimes show up in console when adding a Pricing Table Module.
+- Fixed Visual Builder not loading when the menu included unclosed HTML tags.
+- Fixed Visual Builder not loading when page included scripts using 'document.write'.
+- Fixed a compatibility issue with DiviEstate theme.
+- Prevent themes styles affecting builder wireframe mode.
+- Fixed broken page list when Piklist plugin is activated and there is a page set as static page via 'Dashboard > Settings > Reading'.
+- Fixed issues with unwanted empty "p" tags inside Inline editor in Firefox.
+- Removed unwanted extra padding from TinyMCE's toolbar icons when using Classic Editor.
+- Fixed a jQuery error that could occur on window resize when using a customized header.
+	* core/ui/utils/frames.js
+	* includes/builder/class-et-builder-settings.php
+	* includes/builder/core.php
+	* includes/builder/feature/BlockEditorIntegration.php
+	* includes/builder/frontend-builder/assets/scripts/preboot.js
+	* includes/builder/frontend-builder/bundle.js
+	* includes/builder/frontend-builder/helpers.php
+	* includes/builder/frontend-builder/i18n/quick-actions.php
+	* includes/builder/frontend-builder/view.php
+	* includes/builder/functions.php
+	* includes/builder/module/Image.php
+	* includes/builder/plugin-compat/landing-pages.php
+	* includes/builder/styles/style.css
+	* js/custom.js
+
 version 3.18.9 ( updated 12-18-2018 )
 - Fixed Global preloader sometimes being visible when it should have not.
 - Fixed Inline Editor position when Vertical Menu is enabled.
@@ -67,7 +189,7 @@ version 3.18.7 ( updated 12-13-2018 )
 	* js/custom.js
 
 version 3.18.6 ( updated 12-13-2018 )
-- Fixed a bug that caused the content areas of modules to crash in the Visual Builder in some situations. 
+- Fixed a bug that caused the content areas of modules to crash in the Visual Builder in some situations.
 
 version 3.18.5 ( updated 12-12-2018 )
 - Fixed Inline Editor closing issue when Settings Modal is opened in some cases.

@@ -264,6 +264,48 @@ function et_builder_get_third_party_post_types() {
 }
 
 /**
+ * Get the list of registered Post Types options.
+ *
+ * @since 3.18
+ *
+ * @return array
+ */
+function et_get_registered_post_type_options( $usort = false ) {
+	$blacklist      = et_builder_get_blacklisted_post_types();
+
+	// Extra and Library layouts shouldn't appear in Theme Options as configurable post types.
+	$blacklist      = array_merge( $blacklist, array( 'et_pb_layout', 'layout' ) );
+	$raw_post_types = get_post_types( array(
+		'show_ui' => true,
+	), 'objects' );
+	$post_types     = array();
+
+	foreach ( $raw_post_types as $post_type ) {
+		$is_explicitly_supported = in_array( $post_type->name, et_builder_get_third_party_post_types() );
+		$is_blacklisted          = in_array( $post_type->name, $blacklist );
+		$supports_editor         = post_type_supports( $post_type->name, 'editor' );
+		$is_public               = et_builder_is_post_type_public( $post_type->name );
+
+		if ( ! $is_explicitly_supported && ( $is_blacklisted || ! $supports_editor || ! $is_public ) ) {
+			continue;
+		}
+
+		$post_types[] = $post_type;
+	}
+
+	if ( $usort && is_callable( $usort ) ) {
+		usort( $post_types, $usort );
+	}
+
+	$post_type_options = array_combine(
+		wp_list_pluck( $post_types, 'name' ),
+		wp_list_pluck( $post_types, 'label' )
+	);
+
+	return $post_type_options;
+}
+
+/**
  * Get the list of unsupported Post Types.
  *
  * @since 3.10
@@ -1950,6 +1992,8 @@ function et_fb_get_nonces() {
 		'fetchAttachments'              => wp_create_nonce( 'et_fb_fetch_attachments' ),
 		'droploaderProcess'             => wp_create_nonce( 'et_builder_droploader_process_nonce' ),
 		'resolvePostContent'            => wp_create_nonce( 'et_fb_resolve_post_content' ),
+		'getPostTypes'                  => wp_create_nonce( 'et_fb_get_post_types' ),
+		'getPostsList'                  => wp_create_nonce( 'et_fb_get_posts_list' ),
 	);
 
 	return array_merge( $nonces, $fb_nonces );
@@ -4064,6 +4108,77 @@ function et_fb_get_saved_templates() {
 }
 add_action( 'wp_ajax_et_fb_get_saved_templates', 'et_fb_get_saved_templates' );
 
+/*
+ * Retrieves post types that builder enabled
+ *
+ */
+function et_fb_get_post_types() {
+	et_core_security_check( 'edit_posts', 'et_fb_get_post_types' );
+
+	wp_send_json_success( et_get_registered_post_type_options() );
+}
+add_action( 'wp_ajax_et_fb_get_post_types', 'et_fb_get_post_types' );
+
+/*
+ * Retrieves posts list that builder enabled
+ *
+ */
+function et_fb_get_posts_list() {
+	et_core_security_check( 'edit_posts', 'et_fb_get_posts_list' );
+
+	$post_types = et_get_registered_post_type_options();
+	$post_type = isset( $_POST['post_type'] ) ? $_POST['post_type'] : false;
+
+	if ( empty( $post_type ) || ! isset( $post_types[ $post_type ] ) ) {
+		wp_send_json_error();
+	}
+
+	$posts_list = array();
+
+	$query = new ET_Core_Post_Query( $post_type );
+
+	$posts = $query->run( array(
+		'post_status' =>  array( 'draft', 'publish', 'pending' ),
+	) );
+
+	$_utils = ET_Core_Data_Utils::instance();
+
+	$posts = $_utils->array_sort_by( is_array( $posts ) ? $posts : array( $posts ), 'post_title' );
+
+	if ( empty( $posts ) ) {
+		wp_send_json_error();
+	}
+
+	foreach ( $posts as $post ) {
+		// Check if page builder is activated.
+		if ( ! et_pb_is_pagebuilder_used( $post->ID ) ) {
+			continue;
+		}
+
+		// Only include posts that the user is allowed to edit
+		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+			continue;
+		}
+
+		// Skip for post has no title
+		if ( empty( $post->post_title ) ) {
+			continue;
+		}
+
+		$posts_list[ $post->ID ] = array(
+			'id'    => $post->ID,
+			'title' => $post->post_title,
+			'link'  => array(
+				'vb'  => add_query_arg( array( 'et_fb' => '1' ),  get_permalink( $post->ID ) ),
+				'bfb' => add_query_arg( array( 'post' => $post->ID, 'action' => 'edit', 'classic-editor' => '1' ),  admin_url( 'post.php' ) ),
+			),
+		);
+	}
+
+	wp_send_json_success( $posts_list );
+}
+add_action( 'wp_ajax_et_fb_get_posts_list', 'et_fb_get_posts_list' );
+
 function et_pb_get_supported_font_formats() {
 	return apply_filters( 'et_pb_supported_font_formats', array( 'ttf', 'otf' ) );
 }
@@ -5073,8 +5188,8 @@ function _et_pb_code_module_prep_content_regex_cb( $matches ) {
 }
 
 function et_pb_prep_code_module_for_wpautop( $content ) {
-	$content = preg_replace_callback('/\[et_pb_code.*?\](.*?)\[\/et_pb_code\]/mis', '_et_pb_code_module_prep_content_regex_cb', $content );
-	$content = preg_replace_callback('/\[et_pb_fullwidth_code.*?\](.*?)\[\/et_pb_fullwidth_code\]/mis', '_et_pb_code_module_prep_content_regex_cb', $content );
+	$content = preg_replace_callback('/\[et_pb_code(?:\s+[^\]]*)?\](.*?)\[\/et_pb_code\]/mis', '_et_pb_code_module_prep_content_regex_cb', $content );
+	$content = preg_replace_callback('/\[et_pb_fullwidth_code(?:\s+[^\]]*)?\](.*?)\[\/et_pb_fullwidth_code\]/mis', '_et_pb_code_module_prep_content_regex_cb', $content );
 
 	return $content;
 }

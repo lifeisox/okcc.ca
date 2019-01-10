@@ -4332,6 +4332,13 @@
 					'opacity'                   : '',
 					'transform'                 : ''
 				});
+
+				// Prevent animation module with no explicit position property to be incorrectly positioned
+				// after animation is clomplete and animation classname is removed because animation classname has
+				// animation-name property which gives pseudo correct z-index.
+				if ('static' === $element.css('position')) {
+					$element.addClass('et_had_animation');
+				}
 			}
 
 			function et_remove_animation_data( $element ) {
@@ -5103,10 +5110,24 @@
 					$main_header             = $('#main-header'),
 					wpadminbar_height        = $wpadminbar.length && ! is_wp_relative_admin_bar ? $wpadminbar.height() : 0,
 					top_header_height        = !window.et_is_fixed_nav || !is_desktop_view ? 0 : $top_header.height(),
-					data_height_onload       = typeof $main_header.attr('data-height-onload') === 'undefined' ? 0 : $main_header.attr('data-height-onload');
+					data_height_onload       = typeof $main_header.attr('data-height-onload') === 'undefined' ? 0 : $main_header.attr('data-height-onload'),
 					initial_fixed_difference = $main_header.height() === et_pb_get_fixed_main_header_height() || ! is_desktop_view || ! window.et_is_fixed_nav || is_transparent_main_header || is_hide_nav ? 0 : et_pb_get_fixed_main_header_height() - parseFloat( data_height_onload ),
 					section_bottom           = ( this_section_offset.top + $this_section.outerHeight( true ) + initial_fixed_difference ) - ( wpadminbar_height + top_header_height + et_pb_get_fixed_main_header_height() ),
 					animate_modified         = false;
+
+				if (!isVB && window.et_is_fixed_nav && is_transparent_main_header) {
+					// We need to perform an extra adjustment which requires computing header height
+					// in "fixed" mode. It can't be done directly on header because it will change
+					// its appearance so an invisible clone is used instead.
+					var clone = $main_header
+						.clone()
+						.addClass('et-disabled-animations et-fixed-header')
+						.css('visibility', 'hidden')
+						.appendTo($body);
+
+					section_bottom += et_pb_get_fixed_main_header_height() - clone.height();
+					clone.remove();
+				}
 
 				if ( $this_section.length ) {
 					var fullscreen_scroll_duration = 800;
@@ -5224,13 +5245,13 @@
 				window.et_pb_ajax_pagination_cache = window.et_pb_ajax_pagination_cache || [];
 
 				// construct the selector for current module
-				$.each( module_classes, function( index, value ) {
+				$.each(module_classes, function(index, value) {
 					// skip animation classes so no wrong href is formed afterwards
-					if ( $.inArray( value, animation_classes ) !== -1 ) {
+					if ($.inArray(value, animation_classes) !== -1 || 'et_had_animation' === value) {
 						return;
 					}
 
-					if ( '' !== value.trim() ) {
+					if ('' !== value.trim()) {
 						module_class_processed += '.' + value;
 					}
 				});

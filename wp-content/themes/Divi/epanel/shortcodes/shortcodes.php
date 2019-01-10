@@ -953,7 +953,7 @@ add_action( 'admin_head', 'et_init_shortcodes' );
 function et_init_shortcodes() {
 	$is_edit_url = in_array( basename( $_SERVER['PHP_SELF'] ), array( 'post-new.php', 'page-new.php', 'post.php', 'page.php' ) );
 
-	if ( ! is_admin() || ! $is_edit_url || ! current_user_can( 'edit_posts' ) || ! current_user_can( 'edit_pages' ) || et_is_gutenberg_enabled() ) {
+	if ( ! is_admin() || ! $is_edit_url || ! current_user_can( 'edit_posts' ) || ! current_user_can( 'edit_pages' ) || et_core_is_gutenberg_enabled() ) {
 		return;
 	}
 

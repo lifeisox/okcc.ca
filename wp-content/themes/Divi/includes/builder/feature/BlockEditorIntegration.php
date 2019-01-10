@@ -294,6 +294,12 @@ class ET_Builder_Block_Editor_Integration {
 	 * @return array
 	 */
 	public function display_post_states( $post_states, $post ) {
+		// Make sure that $post_states is an array. Third party plugin might modify $post_states and makes it null
+		// which create various issue (i.e. Piklist + Having a page configured as a static page)
+		if ( ! is_array( $post_states ) ) {
+			$post_states = array();
+		}
+
 		if ( et_pb_is_pagebuilder_used( $post->ID ) ) {
 			// Remove Gutenberg if existing
 			$key = array_search( 'Gutenberg', $post_states );
@@ -563,6 +569,6 @@ class ET_Builder_Block_Editor_Integration {
 }
 
 
-if ( et_is_gutenberg_active() ) {
+if ( et_core_is_gutenberg_active() ) {
 	new ET_Builder_Block_Editor_Integration;
 }

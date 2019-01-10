@@ -357,6 +357,49 @@ function et_core_is_fb_enabled() {
 endif;
 
 
+/**
+ * Is Gutenberg active?
+ *
+ * @since 3.19.2 Renamed from {@see et_is_gutenberg_active()} and moved to core.
+ * @since 3.18
+ *
+ * @return bool  True - if the plugin is active
+ */
+if ( ! function_exists( 'et_core_is_gutenberg_active' ) ):
+function et_core_is_gutenberg_active() {
+	global $wp_version;
+
+	static $has_wp5_plus = null;
+
+	if ( is_null( $has_wp5_plus ) ) {
+		$has_wp5_plus = version_compare( $wp_version, '5.0-alpha1', '>=' );
+	}
+
+	return $has_wp5_plus || function_exists( 'is_gutenberg_page' );
+}
+endif;
+
+
+/**
+ * Is Gutenberg active and enabled for the current post
+ * WP 5.0 WARNING - don't use before global post has been set
+ *
+ * @since 3.19.2 Renamed from {@see et_is_gutenberg_enabled()} and moved to core.
+ * @since 3.18
+ *
+ * @return bool  True - if the plugin is active and enabled.
+ */
+if ( ! function_exists( 'et_core_is_gutenberg_enabled' ) ):
+function et_core_is_gutenberg_enabled() {
+	if ( function_exists( 'is_gutenberg_page' ) ) {
+		return et_core_is_gutenberg_active() && is_gutenberg_page() && has_filter( 'replace_editor', 'gutenberg_init' );
+	}
+
+	return et_core_is_gutenberg_active() && function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( null );
+}
+endif;
+
+
 if ( ! function_exists( 'et_core_load_main_fonts' ) ) :
 function et_core_load_main_fonts() {
 	$fonts_url = et_core_get_main_fonts();

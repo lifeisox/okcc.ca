@@ -5,7 +5,7 @@ window.wp = window.wp || {};
 /**
  * The builder version and product name will be updated by grunt release task. Do not edit!
  */
-window.et_builder_version = '3.18.9';
+window.et_builder_version = '3.19.4';
 window.et_builder_product_name = 'Divi';
 
 ( function($) {

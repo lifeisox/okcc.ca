@@ -340,8 +340,10 @@
 					var $adjusted_element = $(this),
 						styling = $adjusted_element.data();
 
-					// Reapply previous styling
-					$adjusted_element.css( styling.fix_page_container_style );
+					if (styling && styling.fix_page_container_style) {
+						// Reapply previous styling
+						$adjusted_element.css( styling.fix_page_container_style );
+					}
 
 				});
 			}
@@ -807,6 +809,7 @@
 			et_change_primary_nav_position( 0 );
 			$(document).trigger('et-pb-header-height-calculated');
 		}
+		window.et_fix_page_container_position = et_fix_page_container_position;
 
 		// Save container width on page load for reference
 		$et_container.data( 'previous-width', $et_container.width() );

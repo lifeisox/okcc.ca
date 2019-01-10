@@ -42,6 +42,12 @@ function et_fb_app_boot( $content ) {
 }
 add_filter( 'the_content', 'et_fb_app_boot', 1 );
 
+function et_fb_wp_nav_menu( $menu ) {
+	// Ensure we fix any unclosed HTML tags in menu since they would break the VB
+	return et_core_fix_unclosed_html_tags( $menu );
+}
+add_filter( 'wp_nav_menu', 'et_fb_wp_nav_menu' );
+
 function et_builder_maybe_include_bfb_template( $template ) {
 	if ( et_builder_bfb_enabled() && ! is_admin() ) {
 		return ET_BUILDER_DIR . 'frontend-builder/bfb-template.php';

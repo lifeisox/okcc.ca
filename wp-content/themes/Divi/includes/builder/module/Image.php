@@ -86,6 +86,7 @@ class ET_Builder_Module_Image extends ET_Builder_Module {
 	function get_fields() {
 		$fields = array(
 			'src' => array(
+				'label'              => esc_html__( 'Image', 'et_builder' ),
 				'type'               => 'upload',
 				'option_category'    => 'basic_option',
 				'upload_button_text' => esc_attr__( 'Upload an image', 'et_builder' ),

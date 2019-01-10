@@ -5546,29 +5546,37 @@ class ET_Builder_Element {
 
 		// Add general fields for modules. Don't add them to module item and column
 		if ( ( ! isset( $this->type ) || 'child' !== $this->type ) && 'et_pb_column' !== $this->slug ) {
-			$fields = array_merge( $fields, apply_filters( 'et_builder_module_general_fields', array(
-				'disabled_on' => array(
-					'label'           => esc_html__( 'Disable on', 'et_builder' ),
-					'type'            => 'multiple_checkboxes',
-					'options'         => array(
-						'phone'   => esc_html__( 'Phone', 'et_builder' ),
-						'tablet'  => esc_html__( 'Tablet', 'et_builder' ),
-						'desktop' => esc_html__( 'Desktop', 'et_builder' ),
+			$disabled_on_fields = array();
+
+			// Add fields based on Role Capability
+			if ( et_pb_is_allowed( 'disable_module' ) ) {
+				$disabled_on_fields = array(
+					'disabled_on' => array(
+						'label'           => esc_html__( 'Disable on', 'et_builder' ),
+						'type'            => 'multiple_checkboxes',
+						'options'         => array(
+							'phone'   => esc_html__( 'Phone', 'et_builder' ),
+							'tablet'  => esc_html__( 'Tablet', 'et_builder' ),
+							'desktop' => esc_html__( 'Desktop', 'et_builder' ),
+						),
+						'additional_att'  => 'disable_on',
+						'option_category' => 'configuration',
+						'description'     => esc_html__( 'This will disable the module on selected devices', 'et_builder' ),
+						'tab_slug'        => 'custom_css',
+						'toggle_slug'     => 'visibility',
 					),
-					'additional_att'  => 'disable_on',
-					'option_category' => 'configuration',
-					'description'     => esc_html__( 'This will disable the module on selected devices', 'et_builder' ),
-					'tab_slug'        => 'custom_css',
-					'toggle_slug'     => 'visibility',
-				),
-				'admin_label' => array(
+				);
+			}
+
+			$common_general_fields = array(
+				'admin_label'  => array(
 					'label'           => esc_html__( 'Admin Label', 'et_builder' ),
 					'type'            => 'text',
 					'option_category' => 'configuration',
 					'description'     => esc_html__( 'This will change the label of the module in the builder for easy identification.', 'et_builder' ),
 					'toggle_slug'     => 'admin_label',
 				),
-				'module_id' => array(
+				'module_id'    => array(
 					'label'           => esc_html__( 'CSS ID', 'et_builder' ),
 					'type'            => 'text',
 					'option_category' => 'configuration',
@@ -5584,7 +5592,11 @@ class ET_Builder_Element {
 					'toggle_slug'     => 'classes',
 					'option_class'    => 'et_pb_custom_css_regular',
 				),
-			) ) );
+			);
+
+			$general_fields = array_merge( $disabled_on_fields, $common_general_fields );
+
+			$fields = array_merge( $fields, apply_filters( 'et_builder_module_general_fields', $general_fields ) );
 		}
 
 		return $fields;
