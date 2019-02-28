@@ -1,3 +1,6 @@
+// Check whether current page is inside (visual) builder or not
+var isBuilder = 'object' === typeof window.ET_Builder;
+
 /*! ET custom.js */
 (function($){
 	window.et_calculating_scroll_position = false;
@@ -196,7 +199,7 @@
 		function et_change_primary_nav_position( delay ) {
 			setTimeout( function() {
 				var $body = $('body'),
-					$wpadminbar = 'undefined' !== typeof window.top ? window.top.jQuery('#wpadminbar') : $('#wpadminbar'),
+					$wpadminbar = isBuilder ? window.top.jQuery('#wpadminbar') : $('#wpadminbar'),
 					$top_header = $( '#top-header' ),
 					et_primary_header_top = 0;
 
@@ -204,7 +207,7 @@
 					var adminbarHeight = $wpadminbar.innerHeight();
 
 					// Adjust admin bar height for builder's preview mode zoom since admin bar is rendered on top window
-					if ('undefined' !== typeof window.top && window.top.jQuery('html').is('.et-fb-preview--zoom:not(.et-fb-preview--desktop)')) {
+					if (isBuilder && window.top.jQuery('html').is('.et-fb-preview--zoom:not(.et-fb-preview--desktop)')) {
 						adminbarHeight = adminbarHeight * 2;
 					}
 
@@ -792,10 +795,19 @@
 					}).appendTo('head');
 				}
 
-				// If the first visible (visibility is significant for for cached split test) section has parallax background,
-				// trigger parallax height resize so the parallax location isn't correctly rendered due to addition of first
-				// section/module margin-top/padding-top which is needed for transparent primary nav
-				if ($('.et_pb_section:visible:first').hasClass('et_pb_section_parallax')) {
+				// If the first visible (visibility is significant for for cached split test) section/row/module has
+				// parallax background, trigger parallax height resize so the parallax location is correctly rendered
+				// due to addition of first section/row/module margin-top/padding-top which is needed for transparent
+				// primary nav
+				var $firstSection = $('.et_pb_section:visible:first');
+				var $firstRow = $firstSection.find('.et_pb_row:visible:first');
+				var $firstModule = $firstSection.find('.et_pb_module:visible:first');
+
+				var firstSectionHasParallax = $firstSection.hasClass('et_pb_section_parallax');
+				var firstRowHasParallax = $firstRow.hasClass('et_pb_section_parallax');
+				var firstModuleHasParallax = $firstModule.hasClass('et_pb_section_parallax');
+
+				if (firstSectionHasParallax || firstRowHasParallax || firstModuleHasParallax) {
 					$(window).trigger('resize.etTrueParallaxBackground');
 				}
 
@@ -822,8 +834,7 @@
 				et_container_actual_width   = ( et_container_width_in_pixel ) ? parseInt( $et_container.width() ) : ( ( parseInt( $et_container.width() ) / 100 ) * window_width ), // $et_container.width() doesn't recognize pixel or percentage unit. It's our duty to understand what it returns and convert it properly
 				containerWidthChanged       = et_container_previous_width !== et_container_actual_width,
 				$slide_menu_container       = $( '.et_slide_in_menu_container' ),
-				isAppFrame                  = 'undefined' !== typeof window.top,
-				$adminbar                   = isAppFrame ? window.top.jQuery('#wpadminbar') : $('#wpadminbar'),
+				$adminbar                   = isBuilder ? window.top.jQuery('#wpadminbar') : $('#wpadminbar'),
 				page_container_margin;
 
 			if ( et_is_fixed_nav && containerWidthChanged ) {
@@ -847,7 +858,7 @@
 			}
 
 			// Update header and primary adjustment when transitioning across breakpoints or inside visual builder
-			if (($adminbar.length && et_is_fixed_nav && window_width >= 740 && window_width <= 782) || isAppFrame) {
+			if (($adminbar.length && et_is_fixed_nav && window_width >= 740 && window_width <= 782) || isBuilder) {
 				et_calculate_header_values();
 
 				et_change_primary_nav_position( 0 );
@@ -903,7 +914,7 @@
 			if ( et_is_fixed_nav ) {
 				et_calculate_header_values();
 			}
-			
+
 			// Run container position calculation with 0 timeout to make sure all elements are ready for proper calculation.
 			setTimeout(function() {
 				et_fix_page_container_position();
@@ -1189,6 +1200,14 @@
 				$( window ).on( 'scroll', et_pb_window_side_nav_scroll_init );
 			}
 		};
+
+		if ($('body').is('.et-fb, .et-bfb')) {
+			var _ = window._ || isBuilder && window.top._;
+			if (_) {
+				// Debounce slow function
+				window.et_pb_side_nav_page_init = _.debounce(window.et_pb_side_nav_page_init, 200);
+			}
+		}
 
 		et_pb_side_nav_page_init();
 

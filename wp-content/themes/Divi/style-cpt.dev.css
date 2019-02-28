@@ -7,7 +7,7 @@
 /*!
 Theme Name: Divi
 Theme URI: http://www.elegantthemes.com/gallery/divi/
-Version: 3.19.4
+Version: 3.19.18
 Description: Smart. Flexible. Beautiful. Divi is the most powerful theme in our collection.
 Author: Elegant Themes
 Author URI: http://www.elegantthemes.com
@@ -342,6 +342,13 @@ select {
 
 textarea {
 	padding: 4px;
+}
+
+input,
+textarea,
+select,
+button {
+	font-family: inherit;
 }
 
 /* Images */
@@ -2126,7 +2133,7 @@ p.woocommerce-result-count {
 	-moz-border-radius: 3px !important;
 	border-radius: 3px !important;
 	color: #fff;
-	background: #ef8f61!important;
+	background: #ef8f61 !important;
 	-webkit-box-shadow: none !important;
 	-moz-box-shadow: none !important;
 	box-shadow: none !important;
@@ -2177,7 +2184,7 @@ p.woocommerce-result-count {
 .woocommerce ul.products li.product .price del,
 .woocommerce-page ul.products li.product .price del {
 	margin: 0!important;
-	color: #666!important;
+	color: #666 !important;
 	font-size: 14px;
 }
 
@@ -2233,7 +2240,7 @@ table.cart td.actions .checkout-button {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-	color: #666!important;
+	color: #666 !important;
 	background-color: #ececec;
 	font-family: "Open Sans", Arial, sans-serif;
 	font-size: 12px;
@@ -2274,7 +2281,7 @@ table.cart td.actions .checkout-button {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	color: #fff!important;
+	color: #fff !important;
 	background-color: rgba(0, 0, 0, 0.2) !important;
 	-webkit-box-shadow: none !important;
 	-moz-box-shadow: none !important;
@@ -6427,7 +6434,7 @@ ul.et_pb_side_nav .side_nav_item a.active {
 }
 
 /* Circle Counter Module */
-.et-fb .et_pb_number_counter {
+.et-fb.et-db #et-boc .et_pb_number_counter {
 	opacity: 1;
 }
 
@@ -16506,7 +16513,7 @@ span.comment_date {
 }
 
 .et-db #et-boc .et_pb_countdown_timer .section.zero p {
-	opacity: 0.40;
+	opacity: 0.4;
 }
 
 .et-db #et-boc .et_pb_countdown_timer .section p.value {
@@ -18006,7 +18013,6 @@ span.comment_date {
 .et-db #et-boc .et_pb_section_parallax .et_pb_parallax_css,
 .et-db #et-boc .et_pb_slides .et_parallax_bg.et_pb_parallax_css {
 	background-attachment: fixed;
-	-webkit-transform: translate3d(0, 0, 0);
 }
 
 .et-db #et-boc body.et-bfb .et_pb_section_parallax .et_pb_parallax_css,
@@ -21755,11 +21761,11 @@ span.comment_date {
 		font-size: 14px !important;
 	}
 
-	.et-db #et-boc .et_pb_post .et_pb_slide {
+	.et-db #et-boc .et_pb_post > .et_pb_gallery_post_type > .et_pb_slides > .et_pb_slide {
 		min-height: 384px !important;
 	}
 
-	.et-db #et-boc .et_pb_blog_grid .et_pb_post .et_pb_slide {
+	.et-db #et-boc .et_pb_blog_grid > .et_pb_gallery_post_type > .et_pb_slides > .et_pb_post .et_pb_slide {
 		min-height: 182px !important;
 	}
 
@@ -22197,11 +22203,11 @@ span.comment_date {
 		font-size: 14px !important;
 	}
 
-	.et-db #et-boc .et_pb_post .et_pb_slide {
+	.et-db #et-boc .et_pb_post > .et_pb_gallery_post_type > .et_pb_slides > .et_pb_slide {
 		min-height: 222px !important;
 	}
 
-	.et-db #et-boc .et_pb_blog_grid .et_pb_post .et_pb_slide {
+	.et-db #et-boc .et_pb_blog_grid .et_pb_post > .et_pb_gallery_post_type > .et_pb_slides > .et_pb_slide {
 		min-height: 222px !important;
 	}
 
@@ -22408,8 +22414,8 @@ span.comment_date {
 		padding: 35px 20px !important;
 	}
 
-	.et-db #et-boc .et_pb_post .et_pb_slide,
-	.et-db #et-boc .et_pb_blog_grid .et_pb_post .et_pb_slide {
+	.et-db #et-boc .et_pb_post > .et_pb_gallery_post_type > .et_pb_slides > .et_pb_slide,
+	.et-db #et-boc .et_pb_blog_grid > .et_pb_gallery_post_type > .et_pb_slides > .et_pb_post .et_pb_slide {
 		min-height: 156px !important;
 	}
 
