@@ -1,0 +1,44 @@
+#epanel-title:before {
+  font-family: 'ET-Extra';
+  font-size: 24px;
+  content: '\e641';
+  top: -3px;
+}
+#epanel-header,
+h1#epanel-title,
+.reset-popup-header,
+.box-desc-top {
+  background-color: #3e5062;
+}
+#epanel-mainmenu a:hover,
+#epanel-mainmenu li.ui-state-active a,
+#epanel-header .et-defaults-button:hover {
+  background-color: #47D895;
+}
+#epanel-mainmenu,
+#epanel-header .et-defaults-button {
+  background-color: #4EE6A0;
+}
+.et-save-button,
+#epanel-reset {
+  background-color: #47D895;
+}
+.et-save-button:hover,
+#epanel-reset:hover {
+  background-color: #41C387;
+}
+.no {
+  background-color: #40C387;
+}
+.no:hover {
+  background-color: #36A974;
+}
+#epanel p.inputs .jquery-checkbox .mark {
+  color: #47D895;
+}
+.box-desc-content .lightboxclose {
+  background-color: #354554;
+}
+.box-desc-content .lightboxclose:hover {
+  background-color: #2D3B48;
+}
